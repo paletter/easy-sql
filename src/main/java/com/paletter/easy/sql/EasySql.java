@@ -16,16 +16,69 @@ import com.paletter.easy.sql.utils.DateUtils;
 
 public class EasySql {
 
-	public static <T> List<T> queryList(Connection conn, String sql, Class<T> retrurnClass, Object... params) {
+	public static <T> T queryOne(Connection conn, String sql, Class<T> retrurnClass, Object... params) {
 
+		try {
+			
+			PreparedStatement stat = conn.prepareStatement(sql);
+			if (params != null) {
+				int paramIndex = 1;
+				for (Object o : params) {
+					stat.setObject(paramIndex ++, o);
+				}
+			}
+			
+			ResultSet rs = stat.executeQuery();
+			while (rs.next()) {
+				
+				T data = retrurnClass.newInstance();
+				for (Method m : retrurnClass.getMethods()) {
+					if (m.getName().startsWith("set")) {
+						
+						// Replace upper to underline
+						Pattern p = Pattern.compile("[A-Z]");
+						StringBuilder colName = new StringBuilder(m.getName().substring(3));
+						Matcher mat = p.matcher(m.getName().substring(3));
+						int i = 0;
+						while (mat.find()) {
+							colName.replace(mat.start() + i, mat.end() + i, "_" + mat.group().toLowerCase());
+							i ++;
+						}
+						if (colName.charAt(0) == '_') colName.deleteCharAt(0);
+						
+						// Set column value
+						if (rs.findColumn(colName.toString()) > 0 && rs.getObject(colName.toString()) != null) {
+							if (m.getParameterTypes()[0].equals(Date.class)) {
+								String date = rs.getString(colName.toString());
+								m.invoke(data, DateUtils.parse(date, "yyyy-MM-dd HH:mm:ss"));
+							} else {
+								m.invoke(data, rs.getObject(colName.toString()));
+							}
+						}
+					}
+				}
+
+				return data;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public static <T> List<T> queryList(Connection conn, String sql, Class<T> retrurnClass, Object... params) {
+		
 		List<T> list = new ArrayList<T>();
 		
 		try {
 			
 			PreparedStatement stat = conn.prepareStatement(sql);
-			int paramIndex = 1;
-			for (Object o : params) {
-				stat.setObject(paramIndex ++, o);
+			if (params != null) {
+				int paramIndex = 1;
+				for (Object o : params) {
+					stat.setObject(paramIndex ++, o);
+				}
 			}
 			
 			ResultSet rs = stat.executeQuery();
