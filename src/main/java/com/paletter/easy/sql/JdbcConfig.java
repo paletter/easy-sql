@@ -1,8 +1,6 @@
 package com.paletter.easy.sql;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
@@ -18,25 +16,18 @@ public class JdbcConfig {
 	public static void loadJdbcProperties() {
 		try {
 
-			URL jdbcResource = JdbcConfig.class.getClassLoader().getResource("jdbc.properties");
-			File jdbcFile = new File(jdbcResource.getPath());
-			if (!jdbcFile.exists()) {
-				System.out.println("jdbc.properties not exist.");
-			}
-
-			if (jdbcFile.exists()) {
-				Properties p = new Properties();
-				p.load(new FileInputStream(jdbcFile));
-				Enumeration<Object> es = p.keys();
-				while (es.hasMoreElements()) {
-					String key = (String) es.nextElement();
-					String value = (String) p.get(key);
-					
-					if ("drive".equals(key)) drive = value;
-					if ("url".equals(key)) url = value;
-					if ("username".equals(key)) user = value;
-					if ("password".equals(key)) pwd = value;
-				}
+			InputStream jdbcStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("jdbc.properties");
+			Properties p = new Properties();
+			p.load(jdbcStream);
+			Enumeration<Object> es = p.keys();
+			while (es.hasMoreElements()) {
+				String key = (String) es.nextElement();
+				String value = (String) p.get(key);
+				
+				if ("drive".equals(key)) drive = value;
+				if ("url".equals(key)) url = value;
+				if ("username".equals(key)) user = value;
+				if ("password".equals(key)) pwd = value;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
