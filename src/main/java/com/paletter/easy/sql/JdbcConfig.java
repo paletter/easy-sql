@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
+import com.paletter.easy.sql.utils.LogUtil;
+
 public class JdbcConfig {
 
 	private static String drive;
@@ -17,12 +19,18 @@ public class JdbcConfig {
 		try {
 
 			InputStream jdbcStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("jdbc.properties");
-			Properties p = new Properties();
-			p.load(jdbcStream);
-			Enumeration<Object> es = p.keys();
+			
+			if (jdbcStream == null || jdbcStream.available() <= 0) {
+				LogUtil.print("Load jdbc file fail. jdbc file not exist.");
+				return;
+			}
+			
+			Properties pro = new Properties();
+			pro.load(jdbcStream);
+			Enumeration<Object> es = pro.keys();
 			while (es.hasMoreElements()) {
 				String key = (String) es.nextElement();
-				String value = (String) p.get(key);
+				String value = (String) pro.get(key);
 				
 				if ("drive".equals(key)) drive = value;
 				if ("url".equals(key)) url = value;
@@ -30,7 +38,7 @@ public class JdbcConfig {
 				if ("password".equals(key)) pwd = value;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("Load jdbc file error", e);
 		}
 	}
 	
