@@ -1,6 +1,7 @@
 package com.paletter.easy.sql;
 
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,7 @@ public class EasyQuery {
 		return queryOne(EasyConnection.getConn(), sql, retrurnClass, params);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <T> T queryOne(Connection conn, String sql, Class<T> retrurnClass, Object... params) {
 
 		try {
@@ -33,6 +35,18 @@ public class EasyQuery {
 			ResultSet rs = stat.executeQuery();
 			while (rs.next()) {
 				
+				if (retrurnClass.equals(Integer.class)) {
+					return (T) Integer.valueOf(rs.getInt(1));
+				}
+				if (retrurnClass.equals(String.class)) {
+					if (rs.getString(1) == null) return null;
+					return (T) String.valueOf(rs.getString(1));
+				}
+				if (retrurnClass.equals(BigDecimal.class)) {
+					if (rs.getString(1) == null) return null;
+					return (T) new BigDecimal(rs.getString(1));
+				}
+
 				T data = retrurnClass.newInstance();
 				for (Method m : retrurnClass.getMethods()) {
 					if (m.getName().startsWith("set")) {
