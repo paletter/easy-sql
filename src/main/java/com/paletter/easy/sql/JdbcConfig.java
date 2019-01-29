@@ -21,7 +21,6 @@ public class JdbcConfig {
 		try {
 
 			InputStream jdbcStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("jdbc.properties");
-			
 			if (jdbcStream == null || jdbcStream.available() <= 0) {
 				log.info("Load jdbc file fail. jdbc file not exist.");
 				return;
