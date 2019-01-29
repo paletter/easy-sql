@@ -4,10 +4,12 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.Properties;
 
-import com.paletter.easy.sql.utils.LogUtil;
+import org.apache.log4j.Logger;
 
 public class JdbcConfig {
 
+	private static Logger log = Logger.getLogger(JdbcConfig.class);
+	
 	private static String drive;
 	private static String url;
 	private static String user;
@@ -21,7 +23,7 @@ public class JdbcConfig {
 			InputStream jdbcStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("jdbc.properties");
 			
 			if (jdbcStream == null || jdbcStream.available() <= 0) {
-				LogUtil.print("Load jdbc file fail. jdbc file not exist.");
+				log.info("Load jdbc file fail. jdbc file not exist.");
 				return;
 			}
 			
@@ -38,7 +40,7 @@ public class JdbcConfig {
 				if ("password".equals(key)) pwd = value;
 			}
 		} catch (Exception e) {
-			LogUtil.error("Load jdbc file error", e);
+			log.error("Load jdbc file error", e);
 		}
 	}
 	
