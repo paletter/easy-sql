@@ -1,25 +1,23 @@
 package com.paletter.easy.sql;
 
 import java.lang.reflect.Method;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.paletter.easy.sql.utils.DateUtils;
+import com.paletter.easy.sql.utils.SQLUtils;
 
 public class EasyUpdate {
 
-	public static void update(Object object, String table, String whereCondition) {
-		update(EasyConnection.getConn(), object, table, whereCondition);
+	public static void update(Object object, String table, String whereCondition, Object... params) {
+		update(EasyConnection.getConn(), object, table, whereCondition, params);
 	}
 	
-	public static void update(Connection conn, Object object, String table, String whereCondition) {
+	public static void update(Connection conn, Object object, String table, String whereCondition, Object... params) {
 		
 		PreparedStatement stat = null;
 		
@@ -75,20 +73,12 @@ public class EasyUpdate {
 			
 			int index = 1;
 			for (Object val : valList) {
-				if (val instanceof Integer) {
-					stat.setInt(index ++, (int) val);
-				} else if (val instanceof String) {
-					stat.setString(index ++, val.toString());
-				} else if (val instanceof Double) {
-					stat.setDouble(index ++, (double) val);
-				} else if (val instanceof Float) {
-					stat.setFloat(index ++, (float) val);
-				} else if (val instanceof Long) {
-					stat.setLong(index ++, (long) val);
-				} else if (val instanceof BigDecimal) {
-					stat.setBigDecimal(index ++, (BigDecimal) val);
-				} else if (val instanceof Date) {
-					stat.setString(index ++, DateUtils.format((Date) val, "yyyy-MM-dd hh:mm:ss"));
+				SQLUtils.addParam(val, stat, index ++);
+			}
+			
+			if (params != null) {
+				for (Object val : params) {
+					SQLUtils.addParam(val, stat, index ++);
 				}
 			}
 			
