@@ -2,6 +2,7 @@ package com.paletter.easy.sql.utils;
 
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
@@ -22,6 +23,14 @@ public class SQLUtils {
 			stat.setBigDecimal(index, (BigDecimal) val);
 		} else if (val instanceof Date) {
 			stat.setString(index, DateUtils.format((Date) val, "yyyy-MM-dd hh:mm:ss"));
+		}
+	}
+	
+	public static boolean isResultContainColumn(ResultSet rs, String colName) {
+		try {
+			return rs.findColumn(colName) > 0;
+		} catch (Throwable e) {
+			return false;
 		}
 	}
 }

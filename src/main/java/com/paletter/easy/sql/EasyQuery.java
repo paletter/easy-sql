@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.paletter.easy.sql.utils.DateUtils;
+import com.paletter.easy.sql.utils.SQLUtils;
 
 public class EasyQuery {
 
@@ -120,12 +121,13 @@ public class EasyQuery {
 						if (colName.charAt(0) == '_') colName.deleteCharAt(0);
 						
 						// Set column value
-						if (rs.findColumn(colName.toString()) > 0 && rs.getObject(colName.toString()) != null) {
-							if (m.getParameterTypes()[0].equals(Date.class)) {
+						if (SQLUtils.isResultContainColumn(rs, colName.toString())) {
+							Object val = rs.getObject(colName.toString());
+							if (val != null && m.getParameterTypes()[0].equals(Date.class)) {
 								String date = rs.getString(colName.toString());
 								m.invoke(data, DateUtils.parse(date, "yyyy-MM-dd HH:mm:ss"));
 							} else {
-								m.invoke(data, rs.getObject(colName.toString()));
+								m.invoke(data, val);
 							}
 						}
 					}

@@ -13,11 +13,11 @@ import com.paletter.easy.sql.utils.SQLUtils;
 
 public class EasyUpdate {
 
-	public static void update(Object object, String table, String whereCondition, Object... params) {
-		update(EasyConnection.getConn(), object, table, whereCondition, params);
+	public static int update(Object object, String table, String whereCondition, Object... params) {
+		return update(EasyConnection.getConn(), object, table, whereCondition, params);
 	}
 	
-	public static void update(Connection conn, Object object, String table, String whereCondition, Object... params) {
+	public static int update(Connection conn, Object object, String table, String whereCondition, Object... params) {
 		
 		PreparedStatement stat = null;
 		
@@ -82,7 +82,7 @@ public class EasyUpdate {
 				}
 			}
 			
-			stat.executeUpdate();
+			return stat.executeUpdate();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,5 +95,7 @@ public class EasyUpdate {
 				}
 			}
 		}
+		
+		return 0;
 	}
 }
