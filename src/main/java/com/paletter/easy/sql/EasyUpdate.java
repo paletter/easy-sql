@@ -30,8 +30,8 @@ public class EasyUpdate {
 			
 			List<Object> valList = new ArrayList<Object>();
 			
-			for (Method m : object.getClass().getDeclaredMethods()) {
-				if (m.getName().startsWith("get")) {
+			for (Method m : object.getClass().getMethods()) {
+				if (m.getModifiers() == Method.DECLARED && m.getName().startsWith("get")) {
 					
 					Object property = m.invoke(object);
 					if (property != null) {
@@ -78,7 +78,39 @@ public class EasyUpdate {
 			
 			if (params != null) {
 				for (Object val : params) {
-					SQLUtils.addParam(val, stat, index ++);
+					SQLUtils.addParamWithNull(val, stat, index ++);
+				}
+			}
+			
+			return stat.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (stat != null) {
+				try {
+					stat.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return 0;
+	}
+	
+	public static int updateBySql(String sql, Object... params) {
+		
+		PreparedStatement stat = null;
+		
+		try {
+			
+			stat = EasyConnection.getConn().prepareStatement(sql);
+			
+			int index = 1;
+			if (params != null) {
+				for (Object val : params) {
+					SQLUtils.addParamWithNull(val, stat, index ++);
 				}
 			}
 			

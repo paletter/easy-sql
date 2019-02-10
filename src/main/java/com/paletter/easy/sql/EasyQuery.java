@@ -50,7 +50,7 @@ public class EasyQuery {
 
 				T data = retrurnClass.newInstance();
 				for (Method m : retrurnClass.getMethods()) {
-					if (m.getName().startsWith("set")) {
+					if (m.getModifiers() == Method.DECLARED && m.getName().startsWith("set")) {
 						
 						// Replace upper to underline
 						Pattern p = Pattern.compile("[A-Z]");

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.paletter.easy.sql.utils.DateUtils;
+import com.paletter.tool.DateUtils;
 
 public class EasyInsert {
 
@@ -33,8 +33,9 @@ public class EasyInsert {
 			
 			List<Object> valList = new ArrayList<Object>();
 			
-			for (Method m : object.getClass().getDeclaredMethods()) {
-				if (m.getName().startsWith("get")) {
+			for (Method m : object.getClass().getMethods()) {
+				if (m.getModifiers() == Method.DECLARED
+					&& m.getName().startsWith("get")) {
 					
 					Object property = m.invoke(object);
 					if (property != null) {
@@ -90,7 +91,7 @@ public class EasyInsert {
 				} else if (val instanceof BigDecimal) {
 					stat.setBigDecimal(index ++, (BigDecimal) val);
 				} else if (val instanceof Date) {
-					stat.setString(index ++, DateUtils.format((Date) val, "yyyy-MM-dd hh:mm:ss"));
+					stat.setString(index ++, DateUtils.format((Date) val, DateUtils.FORMAT_YMD_HMS));
 				}
 			}
 			
