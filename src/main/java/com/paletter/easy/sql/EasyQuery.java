@@ -27,6 +27,10 @@ public class EasyQuery {
 
 		try {
 			
+			SQLString sqlString = new SQLString(sql, params);
+			sql = sqlString.getSql();
+			params = sqlString.getParams();
+			
 			PreparedStatement stat = conn.prepareStatement(sql);
 			if (params != null) {
 				int paramIndex = 1;
@@ -58,6 +62,10 @@ public class EasyQuery {
 		List<T> list = new ArrayList<T>();
 		
 		try {
+
+			SQLString sqlString = new SQLString(sql, params);
+			sql = sqlString.getSql();
+			params = sqlString.getParams();
 			
 			PreparedStatement stat = conn.prepareStatement(sql);
 			if (params != null) {

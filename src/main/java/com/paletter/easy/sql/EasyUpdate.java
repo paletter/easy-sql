@@ -105,6 +105,10 @@ public class EasyUpdate {
 		
 		try {
 			
+			SQLString sqlString = new SQLString(sql, params);
+			sql = sqlString.getSql();
+			params = sqlString.getParams();
+			
 			stat = EasyConnection.getConn().prepareStatement(sql);
 			
 			int index = 1;

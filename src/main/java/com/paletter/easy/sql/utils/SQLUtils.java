@@ -9,7 +9,7 @@ import java.util.Date;
 import com.paletter.tool.DateUtils;
 
 public class SQLUtils {
-
+	
 	public static void addParam(Object val, PreparedStatement stat, Integer index) throws SQLException {
 		if (val instanceof Integer) {
 			stat.setInt(index, (int) val);

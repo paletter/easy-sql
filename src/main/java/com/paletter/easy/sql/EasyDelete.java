@@ -4,13 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.paletter.easy.sql.utils.SQLUtils;
+
 public class EasyDelete {
 
-	public static void delete(String table, String whereCondition) {
-		delete(EasyConnection.getConn(), table, whereCondition);
+	public static void delete(String table, String whereCondition, Object... params) {
+		delete(EasyConnection.getConn(), table, whereCondition, params);
 	}
 
-	public static void delete(Connection conn, String table, String whereCondition) {
+	public static void delete(Connection conn, String table, String whereCondition, Object... params) {
 		
 		PreparedStatement stat = null;
 		
@@ -24,6 +26,12 @@ public class EasyDelete {
 			}
 			
 			stat = conn.prepareStatement(sql.toString());
+
+			if (params != null) {
+				int index = 1;
+				for (Object val : params)
+					SQLUtils.addParamWithNull(val, stat, index ++);
+			}
 			
 			stat.executeUpdate();
 			
