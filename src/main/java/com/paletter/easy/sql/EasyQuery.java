@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 
 import com.paletter.easy.sql.utils.DateUtils;
 import com.paletter.easy.sql.utils.SQLUtils;
+import com.paletter.tool.StringUtils;
 
 public class EasyQuery {
 
@@ -110,24 +111,37 @@ public class EasyQuery {
 				
 				// Replace upper to underline
 				Pattern p = Pattern.compile("[A-Z]");
-				StringBuilder colName = new StringBuilder(m.getName().substring(3));
+				String camelCaseColName = StringUtils.toLowerCaseFirstChar(m.getName().substring(3));
+				StringBuilder underlineColName = new StringBuilder(camelCaseColName);
 				Matcher mat = p.matcher(m.getName().substring(3));
 				int i = 0;
 				while (mat.find()) {
-					colName.replace(mat.start() + i, mat.end() + i, "_" + mat.group().toLowerCase());
+					underlineColName.replace(mat.start() + i, mat.end() + i, "_" + mat.group().toLowerCase());
 					i ++;
 				}
-				if (colName.charAt(0) == '_') colName.deleteCharAt(0);
+				if (underlineColName.charAt(0) == '_') underlineColName.deleteCharAt(0);
 				
 				// Set column value
-				if (SQLUtils.isResultContainColumn(rs, colName.toString())) {
-					Object val = rs.getObject(colName.toString());
+				if (SQLUtils.isResultContainColumn(rs, underlineColName.toString())) {
+					
+					Object val = rs.getObject(underlineColName.toString());
 					if (val != null && m.getParameterTypes()[0].equals(Date.class)) {
-						String date = rs.getString(colName.toString());
+						String date = rs.getString(underlineColName.toString());
 						m.invoke(data, DateUtils.parse(date, "yyyy-MM-dd HH:mm:ss"));
 					} else {
 						m.invoke(data, val);
 					}
+					
+				} else if (SQLUtils.isResultContainColumn(rs, camelCaseColName)) {
+
+					Object val = rs.getObject(camelCaseColName);
+					if (val != null && m.getParameterTypes()[0].equals(Date.class)) {
+						String date = rs.getString(camelCaseColName);
+						m.invoke(data, DateUtils.parse(date, "yyyy-MM-dd HH:mm:ss"));
+					} else {
+						m.invoke(data, val);
+					}
+					
 				}
 			}
 		}
