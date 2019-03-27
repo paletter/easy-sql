@@ -3,6 +3,8 @@ package com.paletter.easy.sql;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+import com.paletter.easy.sql.utils.LogUtil;
+
 public class EasyConnection {
 
 	private static Connection conn;
@@ -20,7 +22,7 @@ public class EasyConnection {
 			Class.forName(drive);
 			conn = DriverManager.getConnection(url, user, pwd);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("EasyConnection.connection error", e);
 		}
 	}
 	

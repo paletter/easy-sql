@@ -13,8 +13,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.paletter.easy.sql.utils.DateUtils;
+import com.paletter.easy.sql.utils.LogUtil;
 import com.paletter.easy.sql.utils.SQLUtils;
+import com.paletter.tool.DateUtils;
 import com.paletter.tool.StringUtils;
 
 public class EasyQuery {
@@ -48,7 +49,7 @@ public class EasyQuery {
 				return data;
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("EasyQuery.queryOne error", e);
 		}
 		
 		return null;
@@ -84,7 +85,7 @@ public class EasyQuery {
 				list.add(data);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("EasyQuery.queryList error", e);
 		}
 		
 		return list;

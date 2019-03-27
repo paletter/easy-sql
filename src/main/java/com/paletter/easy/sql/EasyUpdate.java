@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.paletter.easy.sql.utils.LogUtil;
 import com.paletter.easy.sql.utils.SQLUtils;
 
 public class EasyUpdate {
@@ -85,13 +86,12 @@ public class EasyUpdate {
 			return stat.executeUpdate();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("EasyQuery.update error", e);
 		} finally {
 			if (stat != null) {
 				try {
 					stat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
 				}
 			}
 		}
@@ -121,13 +121,12 @@ public class EasyUpdate {
 			return stat.executeUpdate();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("EasyUpdate.updateBySql error", e);
 		} finally {
 			if (stat != null) {
 				try {
 					stat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
 				}
 			}
 		}

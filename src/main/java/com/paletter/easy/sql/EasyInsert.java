@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.paletter.easy.sql.utils.LogUtil;
 import com.paletter.tool.DateUtils;
 
 public class EasyInsert {
@@ -98,13 +99,13 @@ public class EasyInsert {
 			stat.executeUpdate();
 		
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("EasyInsert.insert error", e);
 		} finally {
 			if (stat != null) {
 				try {
 					stat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					LogUtil.error("EasyInsert.insert close statement error", e);
 				}
 			}
 		}

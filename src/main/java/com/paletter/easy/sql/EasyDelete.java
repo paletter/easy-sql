@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import com.paletter.easy.sql.utils.LogUtil;
 import com.paletter.easy.sql.utils.SQLUtils;
 
 public class EasyDelete {
@@ -36,13 +37,13 @@ public class EasyDelete {
 			stat.executeUpdate();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LogUtil.error("EasyDelete.delete error", e);
 		} finally {
 			if (stat != null) {
 				try {
 					stat.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					LogUtil.error("EasyDelete.delete close statement error", e);
 				}
 			}
 		}
