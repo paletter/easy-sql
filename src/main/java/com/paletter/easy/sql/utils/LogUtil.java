@@ -10,7 +10,6 @@ public class LogUtil {
 	public static Integer LEVLE = 1;
 	
 	public static void print(String str) {
-//		System.out.println(str);
 		logger.info(str);
 	}
 	
@@ -24,13 +23,13 @@ public class LogUtil {
 	
 	public static void printDebug(String str) {
 		if (LEVLE <= 1) {
-			System.out.println(str);
+			logger.debug(str);
 		}
 	}
 	
 	public static void printDebug2(String str) {
 		if (LEVLE <= 2) {
-			System.out.println(str);
+			logger.debug(str);
 		}
 	}
 }
