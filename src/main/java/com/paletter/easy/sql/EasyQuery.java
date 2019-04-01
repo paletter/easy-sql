@@ -27,13 +27,16 @@ public class EasyQuery {
 	@SuppressWarnings("unchecked")
 	public static <T> T queryOne(Connection conn, String sql, Class<T> retrurnClass, Object... params) {
 
+		PreparedStatement stat = null;
+		ResultSet rs = null;
+		
 		try {
 			
 			SQLString sqlString = new SQLString(sql, params);
 			sql = sqlString.getSql();
 			params = sqlString.getParams();
 			
-			PreparedStatement stat = conn.prepareStatement(sql);
+			stat = conn.prepareStatement(sql);
 			if (params != null) {
 				int paramIndex = 1;
 				for (Object o : params) {
@@ -41,7 +44,7 @@ public class EasyQuery {
 				}
 			}
 			
-			ResultSet rs = stat.executeQuery();
+			rs = stat.executeQuery();
 			while (rs.next()) {
 				
 				T data = parseResult(rs, retrurnClass);
@@ -50,6 +53,17 @@ public class EasyQuery {
 			}
 		} catch (Exception e) {
 			LogUtil.error("EasyQuery.queryOne error", e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				
+				if (stat != null) {
+					stat.close();
+				}
+			} catch (Exception e2) {
+			}
 		}
 		
 		return null;
@@ -63,13 +77,16 @@ public class EasyQuery {
 		
 		List<T> list = new ArrayList<T>();
 		
+		PreparedStatement stat = null;
+		ResultSet rs = null;
+		
 		try {
 
 			SQLString sqlString = new SQLString(sql, params);
 			sql = sqlString.getSql();
 			params = sqlString.getParams();
 			
-			PreparedStatement stat = conn.prepareStatement(sql);
+			stat = conn.prepareStatement(sql);
 			if (params != null) {
 				int paramIndex = 1;
 				for (Object o : params) {
@@ -77,7 +94,7 @@ public class EasyQuery {
 				}
 			}
 			
-			ResultSet rs = stat.executeQuery();
+			rs = stat.executeQuery();
 			while (rs.next()) {
 				
 				T data = parseResult(rs, retrurnClass);
@@ -86,6 +103,17 @@ public class EasyQuery {
 			}
 		} catch (Exception e) {
 			LogUtil.error("EasyQuery.queryList error", e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				
+				if (stat != null) {
+					stat.close();
+				}
+			} catch (Exception e2) {
+			}
 		}
 		
 		return list;
