@@ -86,7 +86,10 @@ public class EasyUpdate {
 			return stat.executeUpdate();
 			
 		} catch (Exception e) {
+			
 			LogUtil.error("EasyQuery.update error", e);
+			throw new EasySqlException(e);
+			
 		} finally {
 			if (stat != null) {
 				try {
@@ -95,8 +98,6 @@ public class EasyUpdate {
 				}
 			}
 		}
-		
-		return 0;
 	}
 	
 	public static int updateBySql(String sql, Object... params) {
@@ -121,7 +122,10 @@ public class EasyUpdate {
 			return stat.executeUpdate();
 			
 		} catch (Exception e) {
+			
 			LogUtil.error("EasyUpdate.updateBySql error", e);
+			throw new EasySqlException(e);
+			
 		} finally {
 			if (stat != null) {
 				try {
@@ -130,7 +134,5 @@ public class EasyUpdate {
 				}
 			}
 		}
-		
-		return 0;
 	}
 }

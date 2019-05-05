@@ -51,8 +51,12 @@ public class EasyQuery {
 
 				return data;
 			}
+			
 		} catch (Exception e) {
+			
 			LogUtil.error("EasyQuery.queryOne error", e);
+			throw new EasySqlException(e);
+			
 		} finally {
 			try {
 				if (rs != null) {
@@ -102,7 +106,10 @@ public class EasyQuery {
 				list.add(data);
 			}
 		} catch (Exception e) {
+			
 			LogUtil.error("EasyQuery.queryList error", e);
+			throw new EasySqlException(e);
+			
 		} finally {
 			try {
 				if (rs != null) {

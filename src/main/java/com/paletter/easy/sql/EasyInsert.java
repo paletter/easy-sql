@@ -99,7 +99,10 @@ public class EasyInsert {
 			stat.executeUpdate();
 		
 		} catch (Exception e) {
+			
 			LogUtil.error("EasyInsert.insert error", e);
+			throw new EasySqlException(e);
+			
 		} finally {
 			if (stat != null) {
 				try {

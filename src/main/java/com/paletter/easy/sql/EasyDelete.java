@@ -37,7 +37,10 @@ public class EasyDelete {
 			stat.executeUpdate();
 			
 		} catch (Exception e) {
+			
 			LogUtil.error("EasyDelete.delete error", e);
+			throw new EasySqlException(e);
+			
 		} finally {
 			if (stat != null) {
 				try {
